@@ -8,11 +8,11 @@
  * face that was never installed; the pixels disagree; the export gate listens to the pixels
  * and to a human — never to a single tool. */
 
-import { SEED, ROLE, FRAME_HEIGHT_PX } from '/src/seed.js';
+import { SEED, ROLE, FRAME_HEIGHT_PX } from './seed.js';
 import {
   EXPORT_CHAIN, PROOF_SCHEMAS, SIZE_DEFAULT,
   validateInput, validateFamily, validateText, fail, hashString, isGeneric, round2, exportChain
-} from '/proof/engine.js';
+} from '../proof/engine.js';
 
 const PROOF_ORIGIN = window.MC.origin('proof');
 /* Single-folder mode (python3 -m http.server): one origin, the proof frame is same-origin and
