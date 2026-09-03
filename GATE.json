@@ -1,0 +1,66 @@
+{
+  "app": "typeface",
+  "checks": {
+    "exists": {
+      "ok": true,
+      "detail": ""
+    },
+    "file:origins.json": {
+      "ok": true,
+      "detail": ""
+    },
+    "file:LICENSE": {
+      "ok": true,
+      "detail": ""
+    },
+    "file:README.md": {
+      "ok": true,
+      "detail": ""
+    },
+    "file:DONE.md": {
+      "ok": true,
+      "detail": ""
+    },
+    "file:index.html": {
+      "ok": true,
+      "detail": ""
+    },
+    "license:MIT": {
+      "ok": true,
+      "detail": ""
+    },
+    "readme:snippet": {
+      "ok": true,
+      "detail": ""
+    },
+    "origins:valid": {
+      "ok": true,
+      "detail": ""
+    },
+    "tests:exist": {
+      "ok": true,
+      "detail": "2 files"
+    },
+    "git:commits": {
+      "ok": true,
+      "detail": "1"
+    },
+    "tests:all-pass": {
+      "ok": true,
+      "detail": "test_product_loop.py:PASS; test_proof_origin.py:PASS"
+    },
+    "tests:assert-count": {
+      "ok": true,
+      "detail": "186 checks (static 186, executed 0)"
+    },
+    "serve:main": {
+      "ok": true,
+      "detail": "200"
+    },
+    "serve:proof": {
+      "ok": true,
+      "detail": "200"
+    }
+  },
+  "pass": true
+}
