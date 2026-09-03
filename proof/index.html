@@ -2,327 +2,293 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Proof of Typeface — proof origin</title>
+<link rel="icon" href="data:,">
 <script src="/kit/mc.js"></script>
 <style>
-  :root { color-scheme: light; }
-  body { margin: 0; font: 12px/1.5 ui-monospace, "SFMono-Regular", Menlo, monospace; color: #241f1b; background: #f7f4ee; }
-  .bar { display: flex; align-items: center; gap: 10px; padding: 7px 12px; border-bottom: 1px solid #d9d2c4; background: #fffdf8; }
-  .seal { font: 700 10px/1 ui-monospace, monospace; letter-spacing: .14em; text-transform: uppercase; color: #7b1c13; border: 1.5px solid #7b1c13; border-radius: 2px; padding: 4px 6px; }
-  .meta { color: #7a7264; }
-  #log { padding: 6px 12px; max-height: 96px; overflow: auto; }
-  #log div { border-bottom: 1px dotted #ddd6c8; padding: 3px 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .tag { color: #8a6d1f; }
-  .ok { color: #1c6b45; }
-  /* stamp-style certificate */
-  #cert {
-    margin: 12px; padding: 12px 14px; background: #fffef9; border: 2px solid #241f1b; position: relative;
-    box-shadow: 4px 4px 0 rgba(36,31,27,.12);
+  :root {
+    --ink: #241f1b; --ink-soft: #6f675a; --paper: #f7f4ee; --paper-2: #fffdf8; --rule: #d9d2c4;
+    --stamp: #8c1d12; --seal: #1d6a46; --brass: #8a6a1c; --mono: ui-monospace, "SFMono-Regular", Menlo, monospace;
   }
-  #cert:before { content: ""; position: absolute; inset: 4px; border: 1px solid #cfc6b2; pointer-events: none; }
-  #cert .cap { font: 700 9px/1 ui-monospace, monospace; letter-spacing: .22em; text-transform: uppercase; color: #7a7264; }
-  #cert .head { font: 400 15px/1.2 Georgia, serif; margin: 6px 46px 4px 0; }
-  #cert .head b { font-style: italic; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 12px/1.5 var(--mono); color: var(--ink); background: var(--paper); }
+  .bar { display: flex; align-items: center; gap: 10px; padding: 7px 12px; border-bottom: 1px solid var(--rule); background: var(--paper-2); flex-wrap: wrap; }
+  .seal { font: 700 10px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--stamp); border: 1.5px solid var(--stamp); border-radius: 2px; padding: 4px 6px; }
+  .meta { color: var(--ink-soft); }
+  #log { padding: 6px 12px; max-height: 96px; overflow: auto; }
+  #log li { border-bottom: 1px dotted var(--rule); padding: 3px 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; list-style: none; }
+  #log { margin: 0; }
+  .tag { color: var(--brass); }
+  .good { color: var(--seal); }
+  .bad { color: var(--stamp); }
+  #cert { margin: 12px; padding: 12px 14px; background: var(--paper-2); border: 2px solid var(--ink); position: relative; box-shadow: 4px 4px 0 rgba(36, 31, 27, .12); }
+  #cert::before { content: ""; position: absolute; inset: 4px; border: 1px solid var(--rule); pointer-events: none; }
+  #cert .cap { font: 700 9px/1 var(--mono); letter-spacing: .22em; text-transform: uppercase; color: var(--ink-soft); }
+  #cert .head { font: 400 15px/1.2 Georgia, serif; margin: 6px 70px 4px 0; }
   #cert .who { font: 400 13px/1.3 Georgia, serif; margin: 2px 0 6px; }
   #cert .hashes { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 12px; font-size: 10.5px; }
-  #cert .hashes span { color: #7a7264; }
-  #cert .hashes b { font-weight: 400; font-family: ui-monospace, monospace; }
-  #cert .stamp {
-    position: absolute; right: 9px; top: 9px; font: 700 9px/1.2 ui-monospace, monospace; letter-spacing: .08em;
-    text-transform: uppercase; border: 2px solid currentColor; padding: 5px 6px; border-radius: 2px;
-    transform: rotate(-7deg); width: 62px; text-align: center; background: rgba(255,255,255,.75);
-  }
-  #cert .stamp.red { color: #8c1d12; }
-  #cert .stamp.green { color: #1d6a46; }
+  #cert .hashes span { color: var(--ink-soft); }
+  #cert .hashes b { font-weight: 400; }
+  #cert .stamp { position: absolute; right: 9px; top: 9px; font: 700 9px/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; border: 2px solid currentColor; padding: 5px 6px; border-radius: 2px; transform: rotate(-7deg); width: 74px; text-align: center; background: rgba(255, 255, 255, .75); color: var(--ink-soft); }
+  #cert .stamp.bad { color: var(--stamp); }
+  #cert .stamp.good { color: var(--seal); }
+  @media (prefers-reduced-motion: reduce) { #cert .stamp { transform: none; } }
 </style>
 </head>
 <body>
 <div class="bar">
   <span class="seal">Proof origin</span>
-  <span class="meta">glyph-hash + wrap-fingerprint lab · <span id="origin">self: …</span></span>
+  <span class="meta">two-tails glyph lab · <span id="origin">self: …</span> · <span id="binding">…</span></span>
 </div>
-<div id="cert">
+<div id="cert" aria-live="polite">
   <div class="cap">Proof of Typeface · issued by the proof origin</div>
-  <div class="head">PROOF: <b id="cert-verdict">the face you asked for ≠ the face you got</b></div>
+  <div class="head">PROOF: <b id="cert-verdict">awaiting a face to scrutinise</b></div>
   <div class="who">Face under scrutiny: <span id="cert-family">—</span> · size <span id="cert-size">—</span></div>
   <div class="hashes">
-    <div><span>requested hash</span> <b id="cert-hash">—</b></div>
-    <div><span>matched stand-in</span> <b id="cert-standin">—</b></div>
+    <div><span>serif-tail hash</span> <b id="cert-hash">—</b></div>
+    <div><span>monospace-tail hash</span> <b id="cert-mono">—</b></div>
     <div><span>ink</span> <b id="cert-ink">—</b></div>
     <div><span>width</span> <b id="cert-width">—</b></div>
   </div>
   <div class="stamp" id="cert-stamp">pending</div>
 </div>
-<div id="log"><div class="meta">awaiting measurements…</div></div>
+<ol id="log" aria-live="polite" aria-label="proof origin call log"><li class="meta">awaiting measurements…</li></ol>
 <script type="module">
 import * as E from './engine.js';
 
 const MAIN = window.MC.origin('main');
-const SELF = window.__MC_SELF || window.location.origin;
-document.getElementById('origin').textContent = 'self ' + SELF;
+const SELF = window.location.origin;
+const { SAMPLE_TEXT: SAMPLE, SIZE_DEFAULT, COLUMN_DEFAULT, PROOF_SCHEMAS } = E;
+const $ = (id) => document.getElementById(id);
 
-function log(tool, detail, kind) {
-  const el = document.createElement('div');
-  el.innerHTML = '<span class="tag">' + tool + '</span> <span class="' + (kind || '') + '">' + detail + '</span>';
-  const first = document.getElementById('log').firstElementChild;
-  if (first && first.textContent.indexOf('awaiting') === 0) first.remove();
-  document.getElementById('log').prepend(el);
+$('origin').textContent = 'self ' + SELF;
+$('binding').textContent = window.MC.native ? 'native document.modelContext' : 'kit shim';
+
+window.__calls = [];
+
+function log(tool, detail, cls) {
+  const li = document.createElement('li');
+  const tag = document.createElement('span');
+  tag.className = 'tag';
+  tag.textContent = tool;
+  const body = document.createElement('span');
+  body.className = cls || '';
+  body.textContent = ' ' + detail;
+  li.append(tag, body);
+  const first = $('log').firstElementChild;
+  if (first && first.textContent.startsWith('awaiting')) first.remove();
+  $('log').prepend(li);
+  while ($('log').children.length > 40) $('log').lastElementChild.remove();
   window.__calls.push({ tool, detail: String(detail).slice(0, 160), at: Date.now() });
 }
-window.__calls = [];
-window.__verdicts = [];
-window.__lastCall = null;
-window.__registered = [];
 
-const SIZE_DEFAULT = 26;
-const COLUMN_DEFAULT = 420;
-const SAMPLE = 'Handgloves 2026';
-
-const ac = new AbortController();
-
-async function register(def) {
-  await window.mc.registerTool(def, { exposedTo: [MAIN], signal: ac.signal });
-  window.__registered.push(def.name);
+function renderCert(family, size, v) {
+  $('cert-verdict').textContent = v.substituted ? 'the face you asked for ≠ the face you got' : 'the face you asked for is the face you got';
+  $('cert-family').textContent = family;
+  $('cert-size').textContent = size + ' px';
+  $('cert-hash').textContent = v.hashSerifTail;
+  $('cert-mono').textContent = v.hashMonoTail;
+  $('cert-ink').textContent = v.inkPx + ' px';
+  $('cert-width').textContent = v.widthPx + ' px';
+  $('cert-stamp').textContent = v.substituted ? 'SUBSTITUTED' : 'PROVEN';
+  $('cert-stamp').className = 'stamp ' + (v.substituted ? 'bad' : 'good');
 }
 
-/* proof_glyph_hash — render `text` in the requested family and against three generic
- * stand-ins, and report whether the browser actually obeyed the family. */
-async function proofGlyphHash(input) {
-  const text = String(input.text ?? SAMPLE);
-  const family = String(input.family ?? 'Arial');
-  const size = Number(input.size ?? SIZE_DEFAULT);
-  const v = E.hashVerdict(text, family, size);
-  const payload = Object.assign({ originLabel: 'proof', origin: SELF, text, size, check: E.fontCheck(family, size) }, v);
-  payload.verdict = v.identical
-    ? 'proof:substituted — declared ' + family + ' rasterises identical to ' + v.fallbackHash
-    : 'proof:own-outlines — declared ' + family + ' rasterises to its own hash';
-  window.__verdicts.push(payload);
-  renderCert(payload);
-  log('proof_glyph_hash', family + ' → ' + v.requestedHash + (v.identical ? ' SUBST' : ' own'), v.identical ? '' : 'ok');
-  return payload;
+/* ---------------- input parsing shared by the five tools ---------------- */
+
+
+function parseCommon(input, schema) {
+  const bad = E.validateInput(schema, input);
+  if (bad) return bad;
+  const out = {
+    text: input.text === undefined ? SAMPLE : input.text,
+    size: input.size === undefined ? SIZE_DEFAULT : input.size,
+    letterSpacingPx: input.letterSpacingPx || 0
+  };
+  const t = E.validateText(out.text);
+  if (t) return t;
+  const s = E.validateSize(out.size);
+  if (s) return s;
+  for (const key of ['family', 'familyA', 'familyB']) {
+    if (schema.properties[key]) {
+      const f = E.validateFamily(input[key], key);
+      if (f) return f;
+      out[key] = input[key].trim();
+    }
+  }
+  return out;
 }
 
-function renderCert(p) {
-  const el = document.getElementById('cert');
-  if (!el) return;
-  el.className = p.identical ? 'bad' : 'good';
-  document.getElementById('cert-verdict').textContent = p.identical
-    ? 'the face you asked for ≠ the face you got'
-    : 'the face you asked for is the face you got';
-  document.getElementById('cert-family').textContent = p.requestedFamily;
-  document.getElementById('cert-hash').textContent = p.requestedHash;
-  document.getElementById('cert-standin').textContent = p.identical ? p.fallbackHash : '— (no match)';
-  document.getElementById('cert-ink').textContent = p.inkPx + ' px';
-  document.getElementById('cert-width').textContent = p.widthPx + ' px';
-  document.getElementById('cert-size').textContent = p.size + ' px';
-  document.getElementById('cert-stamp').textContent = p.identical ? 'SUBSTITUTED' : 'PROVEN';
-  document.getElementById('cert-stamp').className = 'stamp ' + (p.identical ? 'red' : 'green');
+const stamp = (payload) => Object.assign({ ok: true, originLabel: 'proof', origin: SELF }, payload);
+
+/* ---------------- the five exposed tools ---------------- */
+
+async function glyphHash(input) {
+  const p = parseCommon(input, PROOF_SCHEMAS.glyph_hash);
+  if (p.ok === false) return p;
+  const v = E.hashVerdict(p.text, p.family, p.size, p.letterSpacingPx);
+  if (!v.inkPx) return E.fail('empty_result', 'The text rasterised to zero ink pixels, so there is no verdict.', 'Use visible characters and a size of at least ' + E.SIZE_MIN + '.');
+  renderCert(p.family, p.size, v);
+  log('glyph_hash', p.family + ' → ' + v.hashSerifTail + (v.substituted ? ' SUBSTITUTED (' + v.kind + ')' : ' own outlines'), v.substituted ? 'bad' : 'good');
+  return stamp(Object.assign({ text: p.text, size: p.size, check: E.fontCheck(p.family, p.size) }, v));
 }
 
-/* proof_metrics — measureText width plus the wrap fingerprint (line right edges + median)
- * for the declared family and the export substitute, with the deltas. */
-async function proofMetrics(input) {
-  const text = String(input.text ?? SAMPLE);
-  const family = String(input.family ?? 'Arial');
-  const size = Number(input.size ?? SIZE_DEFAULT);
-  const columnPx = Number(input.widthPxColumn ?? COLUMN_DEFAULT);
-  const declared = E.wrapFingerprint(text, family, size, columnPx);
-  const sub = E.exportSubstitute(family);
-  const under = E.wrapFingerprint(text, sub, size, columnPx);
-  const req = E.glyphRaster(family, size, text);
-  const payload = {
-    originLabel: 'proof',
-    origin: SELF,
-    text, family, size, columnPx,
-    widthPx: req.widthPx,
+async function wrapMetrics(input) {
+  const p = parseCommon(input, PROOF_SCHEMAS.wrap_metrics);
+  if (p.ok === false) return p;
+  const columnPx = input.columnPx === undefined ? COLUMN_DEFAULT : input.columnPx;
+  const declaredPresence = E.presence(p.family, p.size, p.text);
+  const sub = E.exportSubstitute(p.family, p.size, p.text);
+  const declared = E.wrapFingerprint(p.text, p.family, p.size, columnPx, p.letterSpacingPx);
+  const under = E.wrapFingerprint(p.text, sub.measuredAs, p.size, columnPx, p.letterSpacingPx);
+  const payload = stamp({
+    text: p.text, family: p.family, size: p.size, columnPx, letterSpacingPx: p.letterSpacingPx,
+    declaredPresent: declaredPresence.present,
     declared,
-    substituteFamily: sub,
+    substitute: sub,
+    substituteFamily: sub.measuredAs,
     underSubstitute: under,
     widthDeltaPct: E.pctDelta(declared.widthPx, under.widthPx),
     medianRightEdgeDeltaPct: E.pctDelta(declared.medianRightEdge, under.medianRightEdge),
     lineDelta: under.lineCount - declared.lineCount,
     fingerprintChanged: declared.fingerprint !== under.fingerprint,
+    measuredNote: declaredPresence.present
+      ? 'both faces are installed here; every delta is a measured consequence'
+      : 'declared face is absent here, so "declared" numbers are the browser fallback, not the face itself',
     verdict: declared.fingerprint === under.fingerprint
-      ? 'proof:wrap-stable under export substitute'
-      : 'proof:wrap-shifts under export substitute (' + sub + ')'
-  };
-  log('proof_metrics', family + ' ' + declared.lineCount + '→' + under.lineCount + ' lines, Δw ' + payload.widthDeltaPct + '%');
+      ? 'proof:wrap-stable under export substitute ' + sub.measuredAs
+      : 'proof:wrap-shifts under export substitute ' + sub.measuredAs + ' (' + declared.lineCount + '→' + under.lineCount + ' lines)'
+  });
+  log('wrap_metrics', p.family + ' ' + declared.lineCount + '→' + under.lineCount + ' lines vs ' + sub.measuredAs + ', Δw ' + payload.widthDeltaPct + '%');
   return payload;
 }
 
-/* proof_compare — side-by-side raster of two families over the same string. */
-async function proofCompare(input) {
-  const text = String(input.text ?? SAMPLE);
-  const a = String(input.familyA ?? 'Georgia');
-  const b = String(input.familyB ?? 'Times New Roman');
-  const size = Number(input.size ?? SIZE_DEFAULT);
-  const ra = E.glyphRaster(a, size, text);
-  const rb = E.glyphRaster(b, size, text);
-  const payload = {
-    originLabel: 'proof', origin: SELF, text, size,
-    a: Object.assign({ family: a }, ra),
-    b: Object.assign({ family: b }, rb),
-    identical: ra.hash === rb.hash,
-    inkRatio: ra.inkPx ? E.round2(rb.inkPx / ra.inkPx) : null,
-    widthDeltaPct: E.pctDelta(ra.widthPx, rb.widthPx),
-    verdict: ra.hash === rb.hash
-      ? 'proof:indistinguishable — ' + a + ' and ' + b + ' put identical pixels on glass'
-      : 'proof:distinguishable — different outlines'
-  };
-  log('proof_compare', a + ' vs ' + b + (ra.hash === rb.hash ? ' IDENTICAL' : ' differ'), ra.hash === rb.hash ? '' : 'ok');
+async function compareFaces(input) {
+  const p = parseCommon(input, PROOF_SCHEMAS.compare_faces);
+  if (p.ok === false) return p;
+  const a = E.presence(p.familyA, p.size, p.text);
+  const b = E.presence(p.familyB, p.size, p.text);
+  const identical = a.hash === b.hash;
+  const payload = stamp({
+    text: p.text, size: p.size,
+    a: { family: p.familyA, present: a.present, hash: a.hash, inkPx: a.raster.inkPx, widthPx: a.raster.widthPx },
+    b: { family: p.familyB, present: b.present, hash: b.hash, inkPx: b.raster.inkPx, widthPx: b.raster.widthPx },
+    identical,
+    widthDeltaPct: E.pctDelta(a.raster.widthPx, b.raster.widthPx),
+    verdict: identical
+      ? 'proof:indistinguishable — "' + p.familyA + '" and "' + p.familyB + '" put identical pixels on glass'
+      : 'proof:distinguishable — different outlines' + (a.raster.widthPx === b.raster.widthPx ? ' with identical advance widths (metric-compatible)' : '')
+  });
+  log('compare_faces', p.familyA + ' vs ' + p.familyB + (identical ? ' IDENTICAL' : ' differ'), identical ? 'bad' : 'good');
   return payload;
 }
 
-/* proof_font_check — the lie detector itself: what fonts.check() claims vs what rendered. */
-async function proofFontCheck(input) {
-  const family = String(input.family ?? 'Arial');
-  const size = Number(input.size ?? SIZE_DEFAULT);
-  const claim = E.fontCheck(family, size);
-  const v = E.hashVerdict(SAMPLE, family, size);
-  const payload = {
-    originLabel: 'proof', origin: SELF, family, size,
+async function fontCheckTool(input) {
+  const p = parseCommon(input, PROOF_SCHEMAS.font_check);
+  if (p.ok === false) return p;
+  const claim = E.fontCheck(p.family, p.size);
+  const v = E.hashVerdict(SAMPLE, p.family, p.size);
+  const contradiction = claim.declared === true && v.substituted;
+  const payload = stamp({
+    family: p.family, size: p.size,
     fontsCheck: claim,
-    checkSaysInstalled: claim.declared,
-    glyphHash: v.requestedHash,
-    matchesGeneric: v.identical,
-    standin: v.fallbackFamily,
-    lie: claim.declared === true && v.identical === true,
-    verdict: claim.declared === true && v.identical === true
-      ? 'proof:lie — fonts.check says ' + family + ' is installed, pixels say generic fallback'
-      : 'proof:no-contradiction'
-  };
-  log('proof_font_check', family + ' check=' + claim.declared + (payload.lie ? ' LIE' : ''), payload.lie ? '' : 'ok');
+    checkSaysAvailable: claim.declared,
+    present: v.present,
+    kind: v.kind,
+    substituted: v.substituted,
+    contradiction,
+    verdict: contradiction
+      ? 'proof:contradiction — fonts.check answers true for "' + p.family + '" while the pixels show ' + v.resolvedTo
+      : 'proof:no-contradiction — pixels agree with fonts.check for "' + p.family + '"'
+  });
+  log('font_check', p.family + ' check=' + claim.declared + (contradiction ? ' CONTRADICTED by pixels' : ''), contradiction ? 'bad' : 'good');
   return payload;
 }
 
-/* proof_export_preview — which face an export pipeline would embed, and what that does. */
-async function proofExportPreview(input) {
-  const text = String(input.text ?? SAMPLE);
-  const family = String(input.family ?? 'Arial');
-  const size = Number(input.size ?? SIZE_DEFAULT);
-  const sub = E.exportSubstitute(family);
-  const declared = E.hashVerdict(text, family, size);
-  const embedded = E.hashVerdict(text, sub, size);
-  const payload = {
-    originLabel: 'proof', origin: SELF, text, family, size,
-    declared,
-    embeddedFamily: sub,
-    embeddedHash: embedded.requestedHash,
-    embeddedIsGeneric: embedded.identical,
-    rasterUnchanged: embedded.requestedHash === declared.requestedHash,
-    widthDeltaPct: E.pctDelta(declared.widthPx, embedded.widthPx),
-    modelledBy: 'EXPORT_STACK (modelled pipeline, measured consequences)',
-    verdict: 'proof:export would embed ' + sub + (embedded.identical ? ' (itself a generic fallback)' : '')
-  };
-  log('proof_export_preview', family + ' → ' + sub + (embedded.identical ? ' (generic)' : ''));
+async function exportPreview(input) {
+  const p = parseCommon(input, PROOF_SCHEMAS.export_preview);
+  if (p.ok === false) return p;
+  const declared = E.hashVerdict(p.text, p.family, p.size);
+  const sub = E.exportSubstitute(p.family, p.size, p.text);
+  const embedded = E.presence(sub.measuredAs, p.size, p.text);
+  const payload = stamp({
+    text: p.text, family: p.family, size: p.size,
+    declaredPresent: declared.present,
+    declaredHash: declared.requestedHash,
+    chain: sub.chain,
+    modelledEmbed: sub.modelledEmbed,
+    measuredAs: sub.measuredAs,
+    probed: sub.probed,
+    embeddedHash: embedded.hash,
+    rasterUnchanged: embedded.hash === declared.requestedHash,
+    widthDeltaPct: E.pctDelta(declared.widthPx, embedded.raster.widthPx),
+    modelled: sub.modelled,
+    verdict: 'proof:export would try ' + sub.chain.join(' → ') + '; on this host that is ' + sub.measuredAs
+  });
+  log('export_preview', p.family + ' → ' + sub.modelledEmbed + (sub.measuredAs !== sub.modelledEmbed ? ' (absent here; measured as ' + sub.measuredAs + ')' : ''));
   return payload;
 }
 
-/* decoy_proof — same origin, deliberately NOT exposedTo anyone: invisible cross-origin. */
-async function registerRest() {
-  await register({
-    name: 'proof_glyph_hash',
-    title: 'Glyph hash proof',
-    description: 'Rasterise `text` in `family` on an offscreen canvas and hash the pixels, then do the same for three generic stand-ins (serif, Arial-as-generic-sans, monospace, sans-serif). Returns {requestedHash, fallbackHash, identical, inkPx, widthPx}: identical=true means the browser ignored the declared family and substituted a fallback.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        text: { type: 'string', description: 'Text to rasterise. Default "' + SAMPLE + '".' },
-        family: { type: 'string', description: "Declared CSS font-family, e.g. 'Georgia'." },
-        size: { type: 'number', description: 'Font size in CSS px. Default ' + SIZE_DEFAULT + '.' }
-      },
-      required: ['family']
-    },
-    annotations: { readOnlyHint: true, openWorldHint: false },
-    execute: proofGlyphHash
-  });
-  await register({
-    name: 'proof_metrics',
-    title: 'Metrics + wrap fingerprint',
-    description: 'measureText width for (text, family, size) plus a wrap fingerprint at widthPxColumn: lines[], per-line right edges and medianRightEdge, measured under the declared family and again under the face an export pipeline would substitute. Returns widthDeltaPct / medianRightEdgeDeltaPct / lineDelta.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        text: { type: 'string', description: 'Paragraph text to wrap.' },
-        family: { type: 'string', description: 'Declared CSS font-family.' },
-        size: { type: 'number', description: 'Font size in CSS px. Default ' + SIZE_DEFAULT + '.' },
-        widthPxColumn: { type: 'number', description: 'Column width in px to wrap against. Default ' + COLUMN_DEFAULT + '.' }
-      },
-      required: ['family']
-    },
-    annotations: { readOnlyHint: true, openWorldHint: false },
-    execute: proofMetrics
-  });
-  await register({
-    name: 'proof_compare',
+const TOOLS = [
+  {
+    name: 'glyph_hash',
+    title: 'Glyph hash (two-tails test)',
+    description: 'Rasterise text in a declared family twice, under a serif and a monospace fallback tail, and hash the pixels. Identical hashes prove the face is installed; different hashes prove the browser ignored the name. Returns {present, substituted, kind (own-outlines|absent|aliased), requestedHash, hashSerifTail, hashMonoTail, inkPx, widthPx, check}. Read-only measurement on the proof origin.',
+    inputSchema: PROOF_SCHEMAS.glyph_hash,
+    execute: glyphHash
+  },
+  {
+    name: 'wrap_metrics',
+    title: 'Wrap fingerprint',
+    description: 'Greedy word-wrap text at columnPx with measureText, under the declared family and again under the first installed face of its (modelled) export chain. Returns declared/underSubstitute {lines[], lineCount, medianRightEdge, fingerprint}, widthDeltaPct, medianRightEdgeDeltaPct, lineDelta, substituteFamily. Read-only measurement.',
+    inputSchema: PROOF_SCHEMAS.wrap_metrics,
+    execute: wrapMetrics
+  },
+  {
+    name: 'compare_faces',
     title: 'Compare two faces',
-    description: 'Rasterise the same string twice, once per family, and report whether the pixels are identical (proof_compare is how you prove two family names resolve to one face).',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        text: { type: 'string', description: 'Text to rasterise.' },
-        familyA: { type: 'string', description: 'First family.' },
-        familyB: { type: 'string', description: 'Second family.' },
-        size: { type: 'number', description: 'Font size in CSS px.' }
-      },
-      required: ['familyA', 'familyB']
-    },
-    annotations: { readOnlyHint: true, openWorldHint: false },
-    execute: proofCompare
-  });
-  await register({
-    name: 'proof_font_check',
+    description: 'Rasterise the same text in two families and report whether the pixels are identical, whether each face is installed, and the width delta. Returns {a, b, identical, widthDeltaPct, verdict}. Use it to prove two names resolve to one face. Read-only measurement.',
+    inputSchema: PROOF_SCHEMAS.compare_faces,
+    execute: compareFaces
+  },
+  {
+    name: 'font_check',
     title: 'fonts.check vs pixels',
-    description: 'Ask document.fonts.check() whether a family is available and compare that claim with the glyph hash. Returns lie=true when check() claims the face exists but it rasterises identical to a generic fallback.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        family: { type: 'string', description: 'Family to interrogate.' },
-        size: { type: 'number', description: 'Font size in CSS px.' }
-      },
-      required: ['family']
-    },
-    annotations: { readOnlyHint: true, openWorldHint: false },
-    execute: proofFontCheck
-  });
-  await register({
-    name: 'proof_export_preview',
+    description: 'Ask document.fonts.check() about a family and compare its answer with the two-tails pixel test. Returns {checkSaysAvailable, present, kind, contradiction, verdict}; contradiction=true when check() says true for a face the pixels prove absent or aliased. Read-only.',
+    inputSchema: PROOF_SCHEMAS.font_check,
+    execute: fontCheckTool
+  },
+  {
+    name: 'export_preview',
     title: 'Export face preview',
-    description: 'Report which face the (modelled) export pipeline would embed for a declared family, hash it, and say whether the raster/width changes. This is the PDF-laundering preview.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        text: { type: 'string', description: 'Text to rasterise.' },
-        family: { type: 'string', description: 'Declared family.' },
-        size: { type: 'number', description: 'Font size in CSS px.' }
-      },
-      required: ['family']
-    },
-    annotations: { readOnlyHint: true, openWorldHint: false },
-    execute: proofExportPreview
-  });
+    description: 'Which face an export pipeline would embed for a declared family: the modelled chain, which of its faces are installed here, the face used for measurement, and the raster/width change. Returns {chain, modelledEmbed, measuredAs, probed[], rasterUnchanged, widthDeltaPct}. The chain order is modelled; presence and deltas are measured. Read-only.',
+    inputSchema: PROOF_SCHEMAS.export_preview,
+    execute: exportPreview
+  }
+];
+
+async function boot() {
+  const ac = new AbortController();
+  window.addEventListener('pagehide', () => ac.abort(), { once: true });
+  for (const t of TOOLS) {
+    await window.mc.registerTool(Object.assign({ annotations: { readOnlyHint: true } }, t), { exposedTo: [MAIN], signal: ac.signal });
+  }
+  /* Same origin, deliberately NOT exposedTo anyone: main must never see it cross-origin. */
   await window.mc.registerTool({
-    name: 'decoy_proof',
+    name: 'decoy_unexposed',
     title: 'Decoy (not exposed)',
-    description: 'Lives on the proof origin but is registered without exposedTo, so the main origin must never see it.',
-    inputSchema: { type: 'object' },
+    description: 'Registered on the proof origin without exposedTo. Cross-origin readers never see or execute it. Returns {decoy:true}.',
+    inputSchema: { type: 'object', properties: {}, additionalProperties: false },
     annotations: { readOnlyHint: true },
-    execute: async () => ({ originLabel: 'proof', decoy: true })
+    execute: async () => ({ ok: true, originLabel: 'proof', decoy: true })
   }, { signal: ac.signal });
-  window.__registered.push('decoy_proof (unexposed)');
+  log('ready', TOOLS.length + ' tools exposed to ' + MAIN + ' + 1 unexposed decoy', 'good');
+  window.MC.ready();
 }
 
-window.addEventListener('load', async () => {
-  try {
-    await registerRest();
-    window.__proofHash = E.glyphRaster;
-    window.__proofEngine = E;
-    window.__appReady = true;
-    log('ready', window.__registered.length + ' tools registered (5 exposed to main, 1 decoy)', 'ok');
-  } catch (e) {
-    window.__proofError = String(e);
-    log('error', String(e));
-  }
+window.addEventListener('load', () => {
+  boot().catch((e) => { window.__proofError = String(e); log('error', String(e), 'bad'); });
 });
 </script>
 </body>

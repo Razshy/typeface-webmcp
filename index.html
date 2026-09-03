@@ -4,180 +4,193 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Proof of Typeface — know what your text actually wears</title>
+<link rel="icon" href="data:,">
 <script src="/kit/mc.js"></script>
 <style>
   :root {
     --paper: #f6f3ec;
     --paper-2: #fffdf7;
+    --paper-3: #fbf8f1;
+    --paper-hover: #efe9dc;
+    --paper-select: #f3e6c8;
+    --paper-flash: #f6e3b4;
     --ink: #23201c;
-    --ink-soft: #6d6557;
+    --ink-soft: #5f5749;
+    --ink-disabled: #8d8574;
     --rule: #d7d0c1;
     --rule-soft: #e6e0d3;
     --stamp: #8c1d12;
+    --stamp-wash: rgba(140, 29, 18, .16);
     --seal: #1d6a46;
-    --brass: #8a6a1c;
-    --proof-port: #2c5d7c;
+    --brass: #7a5d15;
+    --proof: #2c5d7c;
+    --white: #ffffff;
+    --console: #1f1c18;
+    --console-ink: #e8e2d4;
+    --scrim: rgba(35, 32, 28, .44);
+    --focus: #2c5d7c;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    --gap: 8px;
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
-  body {
-    margin: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font: 15px/1.6 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-    font-size: 15px;
-  }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.6 var(--serif); }
   button, input, select, textarea { font: inherit; color: inherit; }
-  a { color: var(--ink); }
-  .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; }
-  .kicker {
-    font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
-    font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-soft);
-  }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .mono { font-family: var(--mono); }
+  .kicker { font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-soft); }
+  .hint { color: var(--ink-soft); font-size: 12.5px; }
+  .bad { color: var(--stamp); }
+  .right { text-align: right; }
   /* ---------- masthead ---------- */
   .masthead { border-bottom: 3px double var(--rule); padding: 26px 30px 18px; background: var(--paper-2); }
   .masthead .row { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
-  h1 {
-    margin: 6px 0 4px; font-size: clamp(30px, 5.4vw, 62px); line-height: .96; font-weight: 400;
-    letter-spacing: -.02em;
-  }
-  h1 em { font-style: italic; }
+  .masthead .story { max-width: 34ch; text-align: right; }
+  h1 { margin: 6px 0 4px; font-size: clamp(30px, 5.4vw, 62px); line-height: .96; font-weight: 400; letter-spacing: -.02em; }
   .tagline { margin: 0; color: var(--ink-soft); font-size: 16px; font-style: italic; max-width: 62ch; }
+  .badge { display: inline-block; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; border: 1px solid var(--ink-soft); color: var(--ink-soft); padding: 3px 7px; border-radius: 2px; margin-bottom: 6px; }
+  .badge.native { border-color: var(--seal); color: var(--seal); }
   .spec-strip { display: flex; gap: 26px; flex-wrap: wrap; border-top: 1px solid var(--rule); margin-top: 18px; padding-top: 10px; }
   .spec-strip .cell { min-width: 130px; }
+  .spec-strip .wide { flex: 1; min-width: 220px; }
   .spec-strip .big { font-size: 26px; line-height: 1.1; }
   .spec-strip .big.bad { color: var(--stamp); }
-  .spec-strip .big.good { color: var(--seal); }
-  .audit-line { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--ink-soft); }
+  .spec-strip .big.brass { color: var(--brass); }
+  .audit-line { font-family: var(--mono); font-size: 11px; color: var(--ink-soft); }
   /* ---------- layout ---------- */
-  .layout { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(340px, .85fr); gap: 0; align-items: start; }
-  @media (max-width: 1080px) { .layout { grid-template-columns: 1fr; } }
+  .layout { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(340px, .85fr); align-items: start; }
   main { padding: 26px 30px 60px; border-right: 1px solid var(--rule); min-width: 0; }
-  aside { padding: 26px 26px 60px; position: sticky; top: 0; }
-  @media (max-width: 1080px) { aside { position: static; } }
+  aside { padding: 26px 26px 240px; }
+  @media (max-width: 1080px) { .layout { grid-template-columns: 1fr; } main { border-right: 0; } }
   section.card { background: var(--paper-2); border: 1px solid var(--rule); margin-bottom: 22px; }
-  section.card > header {
-    display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap;
-    padding: 9px 14px; border-bottom: 1px solid var(--rule); background: #fbf8f1;
-  }
+  section.card > header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 9px 14px; border-bottom: 1px solid var(--rule); background: var(--paper-3); }
   section.card > .body { padding: 14px; }
+  .scroll-x { overflow-x: auto; }
   h2 { font-size: 15px; margin: 0; font-weight: 600; letter-spacing: .01em; }
-  .hint { color: var(--ink-soft); font-size: 12.5px; }
   /* ---------- document ---------- */
   #doc { max-width: 620px; }
-  span[data-run] { cursor: pointer; border-radius: 2px; transition: background .12s ease; padding: 0 1px; }
-  span[data-run]:hover { background: #f0e7d2; }
+  span[data-run] { cursor: text; border-radius: 2px; transition: background .12s ease; padding: 0 1px; }
+  span[data-run]:hover { background: var(--paper-select); }
   span[data-run].flagged { box-shadow: inset 0 -3px 0 -1px var(--stamp); }
   span[data-run].waived { box-shadow: inset 0 -3px 0 -1px var(--brass); }
   span[data-run].proven { box-shadow: inset 0 -3px 0 -1px var(--seal); }
-  span[data-run].selected { background: #f3e6c8; }
-  .r-eyebrow { display: block; font: 600 12px/1.8 ui-monospace, Menlo, monospace; letter-spacing: .18em; text-transform: uppercase; }
-  .r-headline { display: block; font-size: 42px; line-height: 1.02; letter-spacing: -.02em; margin: 6px 0 14px; }
-  .r-deck { display: block; font-size: 17px; line-height: 1.55; margin-bottom: 16px; }
-  .r-subhead { display: block; font-size: 21px; line-height: 1.25; margin: 18px 0 10px; border-top: 1px solid var(--rule); padding-top: 12px; }
-  .r-body { display: block; font-size: 15.5px; line-height: 1.62; text-align: justify; hyphens: auto; margin-bottom: 12px; }
-  .r-quote { display: block; font-size: 19px; line-height: 1.45; font-style: italic; border-left: 2px solid var(--stamp); padding-left: 14px; margin: 16px 0; }
-  .r-cta { display: block; font-size: 15px; letter-spacing: .02em; margin: 14px 0; }
-  .r-body2 { display: block; font-size: 15px; line-height: 1.6; text-align: justify; margin-bottom: 12px; }
-  .r-footer { display: block; font-size: 12.5px; color: var(--ink-soft); border-top: 1px solid var(--rule-soft); padding-top: 10px; margin-top: 14px; }
-  /* ---------- buttons ---------- */
-  button {
-    background: var(--ink); color: var(--paper-2); border: 1px solid var(--ink); border-radius: 2px;
-    padding: 7px 13px; font-size: 12.5px; letter-spacing: .04em; cursor: pointer;
-    font-family: ui-monospace, Menlo, monospace;
-  }
+  span[data-run].selected { background: var(--paper-select); }
+  .r-eyebrow { display: block; font-weight: 600; }
+  .r-headline { display: block; margin: 6px 0 14px; }
+  .r-deck { display: block; margin-bottom: 16px; }
+  .r-subhead { display: block; margin: 18px 0 10px; border-top: 1px solid var(--rule); padding-top: 12px; }
+  .r-body { display: block; text-align: justify; hyphens: auto; margin-bottom: 12px; }
+  .r-quote { display: block; font-style: italic; border-left: 2px solid var(--stamp); padding-left: 14px; margin: 16px 0; }
+  .r-cta { display: block; margin: 14px 0; }
+  .r-body2 { display: block; text-align: justify; margin-bottom: 12px; }
+  .r-footer { display: block; color: var(--ink-soft); border-top: 1px solid var(--rule-soft); padding-top: 10px; margin-top: 14px; }
+  /* ---------- forms + buttons ---------- */
+  button { background: var(--ink); color: var(--paper-2); border: 1px solid var(--ink); border-radius: 2px; padding: 7px 13px; font-size: 12.5px; letter-spacing: .04em; cursor: pointer; font-family: var(--mono); }
   button.ghost { background: transparent; color: var(--ink); }
-  button.ghost:hover { background: #efe9dc; }
-  button:disabled { background: #b9b1a2; border-color: #b9b1a2; color: #fff; cursor: not-allowed; }
+  button.ghost:hover { background: var(--paper-hover); }
+  button:disabled { background: var(--ink-disabled); border-color: var(--ink-disabled); color: var(--white); cursor: not-allowed; }
   button.locked::before { content: "⊘ "; }
   button.small { padding: 4px 8px; font-size: 11px; }
-  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  button.link { background: none; border: 0; padding: 0; color: var(--ink); text-decoration: underline; font-size: 11.5px; }
+  .btn-row { display: flex; gap: var(--gap); flex-wrap: wrap; align-items: center; }
+  select, input[type="text"], input[type="number"], textarea { width: 100%; background: var(--white); border: 1px solid var(--rule); border-radius: 2px; padding: 6px 8px; font-size: 12.5px; font-family: var(--mono); }
+  textarea { min-height: 62px; resize: vertical; }
+  form.tool-form-active { outline: 2px dashed var(--proof); outline-offset: 4px; }
+  form:tool-form-active { outline: 2px dashed var(--proof); outline-offset: 4px; }
+  .find { margin-top: 16px; border-top: 1px solid var(--rule); padding-top: 12px; }
+  .find .row { display: flex; gap: var(--gap); margin-top: 6px; }
   /* ---------- spill meter ---------- */
-  .spill-frame {
-    height: 470px; overflow: hidden; border: 1px solid var(--rule); background: #fff;
-    position: relative; padding: 18px 20px;
-  }
+  .spill-frame { height: 470px; overflow: hidden; border: 1px solid var(--rule); background: var(--white); position: relative; padding: 18px 20px; }
   .spill-frame .run { display: block; }
-  .spill-clip { position: absolute; left: 0; right: 0; bottom: 0; height: 46px; pointer-events: none;
-    background: linear-gradient(to top, rgba(140,29,18,.16), transparent); }
-  .meter { height: 9px; border: 1px solid var(--rule); background: #fff; position: relative; overflow: hidden; }
+  .spill-clip { position: absolute; left: 0; right: 0; bottom: 0; height: 46px; pointer-events: none; background: linear-gradient(to top, var(--stamp-wash), transparent); }
+  .meter-row { display: flex; gap: 12px; align-items: center; margin-top: 10px; }
+  .meter { flex: 1; height: 9px; border: 1px solid var(--rule); background: var(--white); position: relative; overflow: hidden; }
   .meter > i { position: absolute; inset: 0 auto 0 0; background: var(--seal); transition: width .3s ease, background .3s ease; }
   .meter.bad > i { background: var(--stamp); }
-  /* ---------- drawer ---------- */
+  .sim { display: inline-block; font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--brass); border: 1px dashed var(--brass); padding: 1px 5px; }
+  /* ---------- tables, drawer ---------- */
   .drawer-empty { color: var(--ink-soft); font-size: 13px; font-style: italic; }
   table.scrutiny { width: 100%; border-collapse: collapse; font-size: 12.5px; }
-  table.scrutiny th { text-align: left; font: 600 10px/1.6 ui-monospace, Menlo, monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); padding: 4px 6px; border-bottom: 1px solid var(--rule); }
+  table.scrutiny th { text-align: left; font: 600 10px/1.6 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); padding: 4px 6px; border-bottom: 1px solid var(--rule); }
   table.scrutiny td { padding: 5px 6px; border-bottom: 1px dotted var(--rule-soft); vertical-align: top; }
-  table.scrutiny td.v { font-family: ui-monospace, Menlo, monospace; font-size: 11.5px; text-align: right; white-space: nowrap; }
-  .stamp {
-    display: inline-block; font: 700 11px/1.3 ui-monospace, Menlo, monospace; letter-spacing: .1em; text-transform: uppercase;
-    border: 2px solid var(--stamp); color: var(--stamp); padding: 5px 9px; border-radius: 3px; transform: rotate(-1.4deg);
-  }
-  .wax {
-    display: inline-block; font: 700 11px/1.3 ui-monospace, Menlo, monospace; letter-spacing: .1em; text-transform: uppercase;
-    border: 2px solid var(--seal); color: var(--seal); border-radius: 50%; padding: 8px 10px; min-width: 62px; text-align: center;
-  }
-  .brass-tag { display: inline-block; font: 600 10px/1.3 ui-monospace, Menlo, monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--brass); border: 1px solid var(--brass); padding: 2px 5px; }
-  .hashline { font-family: ui-monospace, Menlo, monospace; font-size: 11.5px; }
-  .hashline b { color: var(--stamp); }
-  .hashline b.ok { color: var(--seal); }
+  table.scrutiny td.v { font-family: var(--mono); font-size: 11.5px; text-align: right; white-space: nowrap; }
+  .badge-row { margin-bottom: 10px; }
+  .stamp { display: inline-block; font: 700 11px/1.3 var(--mono); letter-spacing: .1em; text-transform: uppercase; border: 2px solid var(--stamp); color: var(--stamp); padding: 5px 9px; border-radius: 3px; transform: rotate(-1.4deg); }
+  .wax { display: inline-block; font: 700 11px/1.3 var(--mono); letter-spacing: .1em; text-transform: uppercase; border: 2px solid var(--seal); color: var(--seal); border-radius: 50%; padding: 8px 10px; min-width: 62px; text-align: center; }
+  .wax.small-wax { padding: 2px 8px; min-width: 0; border-radius: 2px; }
+  .brass-tag { display: inline-block; font: 600 10px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--brass); border: 1px solid var(--brass); padding: 2px 5px; }
   .wrap-lines { border-left: 1px solid var(--rule); padding-left: 8px; margin-top: 6px; }
-  .wrap-lines .wl { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .wrap-lines .wl { font-family: var(--mono); font-size: 10.5px; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .family-editor { display: grid; grid-template-columns: 1fr auto; gap: 6px var(--gap); align-items: center; margin-top: 12px; }
+  .family-editor label { grid-column: 1 / -1; }
   /* ---------- gate ---------- */
-  #gate-box .gate-count { font-size: 34px; line-height: 1; }
-  #gate-box .gate-count.bad { color: var(--stamp); }
-  #gate-box .gate-count.good { color: var(--seal); }
+  .gate-row { display: flex; gap: 14px; align-items: flex-end; flex-wrap: wrap; }
+  .gate-count { font-size: 34px; line-height: 1; }
+  .gate-count.bad { color: var(--stamp); }
+  .gate-count.good { color: var(--seal); }
+  .gate-count.brass { color: var(--brass); }
+  .threshold { display: grid; grid-template-columns: auto 80px; gap: var(--gap); align-items: center; margin-top: 12px; }
   ul.waivers { list-style: none; margin: 8px 0 0; padding: 0; font-size: 12.5px; }
-  ul.waivers li { border-top: 1px dotted var(--rule); padding: 6px 0; display: flex; gap: 8px; justify-content: space-between; }
+  ul.waivers li { border-top: 1px dotted var(--rule); padding: 6px 0; display: flex; gap: var(--gap); justify-content: space-between; align-items: center; }
   ul.waivers li .mono { font-size: 11px; color: var(--ink-soft); }
-  /* ---------- agent ---------- */
-  .agent-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-bottom: 8px; }
-  select, input[type="text"], textarea {
-    width: 100%; background: #fff; border: 1px solid var(--rule); border-radius: 2px; padding: 6px 8px; font-size: 12.5px;
-    font-family: ui-monospace, Menlo, monospace;
-  }
-  textarea { min-height: 62px; resize: vertical; }
-  pre.result { background: #1f1c18; color: #e8e2d4; padding: 10px; font-size: 11px; max-height: 260px; overflow: auto; margin: 8px 0 0; }
-  ul.tools { list-style: none; margin: 0; padding: 0; font-size: 12px; }
-  ul.tools li { display: grid; grid-template-columns: 1fr auto; gap: 6px; border-top: 1px dotted var(--rule-soft); padding: 4px 0; }
-  ul.tools li:first-child { border-top: 0; }
-  ul.tools .t-name { font-family: ui-monospace, Menlo, monospace; font-size: 11.5px; }
-  ul.tools .t-orig { font-family: ui-monospace, Menlo, monospace; font-size: 9.5px; color: var(--ink-soft); }
-  ul.tools .t-orig.proof { color: var(--proof-port); }
+  ul.waivers li.pending { color: var(--brass); }
+  /* ---------- agent panel ---------- */
+  .agent-row { display: grid; grid-template-columns: 1fr auto; gap: var(--gap); margin-bottom: var(--gap); }
+  pre.result { background: var(--console); color: var(--console-ink); padding: 10px; font-size: 11px; max-height: 260px; overflow: auto; margin: 8px 0 0; white-space: pre-wrap; }
+  ul.tools, ol.log { list-style: none; margin: 0; padding: 0; font-size: 12px; }
+  ul.tools li, ol.log li { border-top: 1px dotted var(--rule-soft); padding: 5px 0; }
+  ul.tools li:first-child, ol.log li:first-child { border-top: 0; }
+  .tool-head, .log-head { display: flex; gap: 6px; align-items: baseline; flex-wrap: wrap; }
+  .t-name { font-family: var(--mono); font-size: 11.5px; }
+  .t-orig { font-family: var(--mono); font-size: 9.5px; color: var(--ink-soft); }
+  .t-orig.proof { color: var(--proof); }
+  .t-title { font-size: 12px; font-weight: 600; }
+  .t-desc { font-size: 11.5px; color: var(--ink-soft); }
+  .t-params { font-family: var(--mono); font-size: 10px; color: var(--ink-soft); }
+  .chip { font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; border: 1px solid var(--rule); padding: 0 4px; border-radius: 2px; color: var(--ink-soft); }
+  ol.log li.err .chip { border-color: var(--stamp); color: var(--stamp); }
+  .log-io { font-family: var(--mono); font-size: 10.5px; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  ul.tools { max-height: 360px; overflow: auto; }
+  ol.log { max-height: 260px; overflow: auto; }
   .flash { animation: flash .5s ease; }
-  @keyframes flash { from { background: #f6e3b4; } to { background: transparent; } }
-  /* ---------- modal ---------- */
+  @keyframes flash { from { background: var(--paper-flash); } to { background: var(--console); } }
+  /* ---------- modal + proof frame ---------- */
   #modal[hidden] { display: none; }
-  #modal { position: fixed; inset: 0; background: rgba(35,32,28,.44); display: grid; place-items: center; z-index: 40; }
+  #modal { position: fixed; inset: 0; background: var(--scrim); display: grid; place-items: center; z-index: 40; }
   #modal .sheet { background: var(--paper-2); border: 1px solid var(--ink); width: min(460px, 92vw); padding: 18px; }
   #modal h3 { margin: 0 0 4px; font-size: 18px; font-weight: 500; }
   #modal label { display: block; margin-top: 10px; }
-  iframe#proof-frame { position: fixed; right: 0; bottom: 0; width: 380px; height: 210px; border: 1px solid var(--rule); border-right: 0; border-bottom: 0; background: #fffdf8; z-index: 30; }
-  iframe#proof-frame.minimised { height: 26px; overflow: hidden; }
+  iframe#proof-frame { position: fixed; right: 0; bottom: 0; width: 380px; height: 210px; border: 1px solid var(--rule); border-right: 0; border-bottom: 0; background: var(--paper-2); z-index: 30; }
+  iframe#proof-frame.minimised { height: 26px; }
   .proof-toggle { position: fixed; right: 8px; bottom: 216px; z-index: 31; }
   @media (max-width: 1080px) { .proof-toggle { bottom: 26px; } iframe#proof-frame { height: 26px; } }
-  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+    .stamp { transform: none; }
+  }
 </style>
 </head>
 <body>
 <header class="masthead">
   <div class="row">
     <div>
+      <span class="badge" id="binding-badge">WebMCP: …</span>
       <div class="kicker">Pre-export lie detector for text</div>
       <h1>Proof of <em>Typeface</em></h1>
-      <p class="tagline">know what your text actually wears — a face you asked for is not a face you got. Every verdict below is measured from pixels drawn in this browser, by a separate origin.</p>
+      <p class="tagline">know what your text actually wears — a face you asked for is not a face you got. Every verdict below is measured from pixels drawn in this browser, by a separate origin, and the gate believes no single tool.</p>
     </div>
-    <div style="text-align:right">
+    <div class="story">
       <div class="kicker">The audit this came from</div>
-      <div class="hint" style="max-width:34ch;text-align:right">a container with 299 installed faces had zero faces claiming the name Arial; asking for Arial silently rendered Liberation Sans; a “Georgia” run fell to a different serif and wrapped 20% early.</div>
+      <div class="hint">a container with 299 installed faces had zero faces claiming the name Arial; asking for Arial silently rendered Liberation Sans; a “Georgia” run fell to a different serif and wrapped 20% early. Every tool in that pipeline reported success.</div>
     </div>
   </div>
   <div class="spec-strip">
     <div class="cell"><div class="kicker">Runs</div><div class="big" id="stat-runs">—</div></div>
-    <div class="cell"><div class="kicker">Substituted</div><div class="big bad" id="stat-flagged">—</div></div>
-    <div class="cell"><div class="kicker">Waived</div><div class="big" id="stat-waived" style="color:var(--brass)">—</div></div>
+    <div class="cell"><div class="kicker">Blocking</div><div class="big bad" id="stat-flagged">—</div></div>
+    <div class="cell"><div class="kicker">Waived by a person</div><div class="big brass" id="stat-waived">—</div></div>
     <div class="cell"><div class="kicker">Page spill</div><div class="big bad" id="stat-spill">—</div></div>
-    <div class="cell" style="flex:1;min-width:220px"><div class="kicker">Proof origin</div><div class="audit-line" id="audit-status">not yet audited</div></div>
+    <div class="cell wide"><div class="kicker">Proof origin</div><div class="audit-line" id="audit-status" aria-live="polite">not yet audited</div><div class="audit-line" id="mode-line"></div></div>
   </div>
 </header>
 
@@ -187,20 +200,20 @@
       <header>
         <h2>The one-pager</h2>
         <div class="btn-row">
-          <span class="hint">click any run to interrogate it</span>
-          <button class="ghost small" id="btn-audit">Re-audit</button>
-          <button class="ghost small" id="btn-reset">Reset seed</button>
+          <span class="hint">click a run to interrogate it · type to edit it</span>
+          <button type="button" class="ghost small" id="btn-audit">Re-audit</button>
+          <button type="button" class="ghost small" id="btn-reset">Reset seed</button>
         </div>
       </header>
       <div class="body">
-        <div id="doc"></div>
-        <form id="find-form" toolname="doc_find" tooldescription="Find runs whose text matches a substring and select the first hit in the document. Returns the matching run ids." toolautosubmit style="margin-top:16px;border-top:1px solid var(--rule);padding-top:12px">
+        <div id="doc" aria-label="the one-pager; each run is editable"></div>
+        <form id="find-form" class="find" toolname="doc_find" tooldescription="Find runs whose text contains a substring and select the first hit in the document. Returns {matches:[runIds], selected}." toolautosubmit>
           <label class="kicker" for="find-q">Declarative tool · find in document</label>
-          <div style="display:flex;gap:8px;margin-top:6px">
-            <input id="find-q" name="query" type="text" required toolparamdescription="Substring to search for in run text" placeholder="e.g. quartz">
+          <div class="row">
+            <input id="find-q" name="query" type="text" required toolparamdescription="Substring to look for in run text, e.g. quartz" placeholder="e.g. quartz">
             <button type="submit" class="ghost small">Find</button>
           </div>
-          <div id="find-out" class="hint" style="margin-top:6px"></div>
+          <div id="find-out" class="hint" aria-live="polite"></div>
         </form>
       </div>
     </section>
@@ -208,21 +221,21 @@
     <section class="card">
       <header>
         <h2>Page spill — fixed-height frame</h2>
-        <span class="hint">real DOM overflow at real sizes</span>
+        <span class="hint">real DOM overflow at real sizes · <span class="sim" title="Which face stands in for a missing one follows a modelled export chain; the overflow itself is measured.">substitute faces: modelled chain</span></span>
       </header>
       <div class="body">
-        <div class="spill-frame" id="spill-frame"><div class="spill-clip"></div></div>
-        <div style="display:flex;gap:12px;align-items:center;margin-top:10px">
-          <div class="meter" id="spill-meter" style="flex:1"><i style="width:0%"></i></div>
-          <span class="mono" id="spill-readout" style="font-size:11.5px">—</span>
+        <div class="spill-frame" id="spill-frame" aria-hidden="true"><div class="spill-clip"></div></div>
+        <div class="meter-row">
+          <div class="meter" id="spill-meter" role="meter" aria-label="page spill as a share of the frame height" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div>
+          <span class="mono" id="spill-readout">—</span>
         </div>
-        <p class="hint" id="spill-note" style="margin:8px 0 0"></p>
+        <p class="hint" id="spill-note" aria-live="polite"></p>
       </div>
     </section>
 
     <section class="card">
-      <header><h2>Audit table</h2><span class="hint">every number shipped to the proof origin</span></header>
-      <div class="body" style="overflow-x:auto">
+      <header><h2>Audit table</h2><span class="hint">every number came back from the proof origin</span></header>
+      <div class="body scroll-x">
         <table class="scrutiny" id="audit-table"></table>
       </div>
     </section>
@@ -231,65 +244,83 @@
   <aside>
     <section class="card" id="drawer">
       <header><h2>Truth drawer</h2><span class="hint" id="drawer-id">no run selected</span></header>
-      <div class="body" id="drawer-body"><p class="drawer-empty">Click a run in the document to compare what it declares with what the renderer actually drew.</p></div>
+      <div class="body" id="drawer-body" aria-live="polite"></div>
     </section>
 
     <section class="card" id="gate-box">
-      <header><h2>Export gate</h2><span class="hint">blocked until proven or waived</span></header>
+      <header><h2>Export gate</h2><span class="hint">blocked until proven, swapped, or waived by a person</span></header>
       <div class="body">
-        <div style="display:flex;gap:14px;align-items:flex-end">
-          <div><div class="kicker">Unresolved</div><div class="gate-count bad" id="gate-blocked">—</div></div>
-          <div><div class="kicker">Waived</div><div class="gate-count" id="gate-waived" style="color:var(--brass)">—</div></div>
+        <div class="gate-row">
+          <div><div class="kicker">Blocking</div><div class="gate-count bad" id="gate-blocked">—</div></div>
+          <div><div class="kicker">Waived</div><div class="gate-count brass" id="gate-waived">—</div></div>
+          <div><div class="kicker">Proposed by agent</div><div class="gate-count brass" id="gate-pending">—</div></div>
           <div id="gate-seal"></div>
         </div>
-        <div class="btn-row" style="margin-top:12px">
-          <button id="btn-export" disabled class="locked">Export</button>
-          <button class="ghost small" id="btn-waive-all">Waive flagged</button>
+        <div class="threshold">
+          <label for="threshold" class="hint">Wrap-shift threshold (% of median right edge) — set by you, read by agents</label>
+          <input id="threshold" type="number" min="0" max="100" step="1" value="10">
         </div>
-        <p class="hint" id="gate-note" style="margin:8px 0 0"></p>
-        <ul class="waivers" id="waiver-list"></ul>
+        <div class="btn-row" style="margin-top: 12px">
+          <button type="button" id="btn-export" disabled class="locked">Export</button>
+          <button type="button" class="ghost small" id="btn-waive-all">Waive all blocking runs…</button>
+          <span class="sim" title="Export stamps a certificate id; no PDF is written.">export: certificate stamp only</span>
+        </div>
+        <p class="hint" id="gate-note" aria-live="polite"></p>
+        <ul class="waivers" id="waiver-list" aria-label="waivers and proposals"></ul>
       </div>
     </section>
 
     <section class="card">
-      <header><h2>Simulate agent</h2><span class="hint">via window.__agent</span></header>
+      <header><h2>Simulate agent</h2><span class="hint">runs through window.__agent, exactly like ChatGPT or Chrome would</span></header>
       <div class="body">
-        <div class="agent-row">
-          <select id="agent-tool" aria-label="Tool"></select>
-          <button id="btn-agent-run">Run</button>
+        <form id="agent-form">
+          <div class="agent-row">
+            <label class="kicker" for="agent-tool" hidden>Tool</label>
+            <select id="agent-tool" aria-label="Tool to run"></select>
+            <button type="submit" id="btn-agent-run">Run</button>
+          </div>
+          <label class="kicker" for="agent-input">Input JSON</label>
+          <textarea id="agent-input" spellcheck="false">{}</textarea>
+        </form>
+        <pre class="result" id="agent-out" aria-live="polite">idle</pre>
+        <div class="btn-row" style="margin-top: 8px">
+          <button type="button" class="ghost small" data-preset="run_audit">run_audit</button>
+          <button type="button" class="ghost small" data-preset="export_gate">export_gate</button>
+          <button type="button" class="ghost small" data-preset="substitute_safe">substitute_safe</button>
+          <button type="button" class="ghost small" data-preset="waiver_propose">waiver_propose</button>
+          <button type="button" class="ghost small" data-preset="proof_glyph_hash">proof_glyph_hash</button>
+          <button type="button" class="ghost small" data-preset="proof_compare_faces">proof_compare_faces</button>
         </div>
-        <textarea id="agent-input" spellcheck="false" aria-label="Tool input JSON">{}</textarea>
-        <pre class="result" id="agent-out">idle</pre>
-        <div class="btn-row" style="margin-top:8px">
-          <button class="ghost small" data-preset="run_audit">run_audit</button>
-          <button class="ghost small" data-preset="metrics_report">metrics_report</button>
-          <button class="ghost small" data-preset="substitute_safe">substitute_safe</button>
-          <button class="ghost small" data-preset="export_gate">export_gate</button>
-        </div>
+        <div class="kicker" style="margin-top: 12px">Invocation log</div>
+        <ol class="log" id="agent-log" aria-live="polite" aria-label="tool invocation log"></ol>
       </div>
     </section>
 
     <section class="card">
-      <header><h2>Registered tools</h2><span class="hint" id="tool-count">0</span></header>
-      <div class="body"><ul class="tools" id="tool-list"></ul></div>
+      <header><h2>Tools as the agent sees them</h2><span class="hint" id="tool-count">0</span></header>
+      <div class="body">
+        <p class="hint">ChatGPT’s browser reads only the top-level tools; Chrome with the WebMCP flag also sees the proof origin’s own tools. The proof_* bridges relay to those so every agent can reach the evidence.</p>
+        <ul class="tools" id="tool-list"></ul>
+      </div>
     </section>
   </aside>
 </div>
 
-<button class="ghost small proof-toggle" id="proof-toggle">proof lab</button>
-<iframe id="proof-frame" title="proof origin"></iframe>
+<button type="button" class="ghost small proof-toggle" id="proof-toggle" aria-expanded="true" aria-controls="proof-frame">proof lab</button>
+<iframe id="proof-frame" name="proof" title="proof origin" allow="tools"></iframe>
+<datalist id="family-options"></datalist>
 
 <div id="modal" hidden>
-  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <form class="sheet" id="waiver-form" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <h3 id="modal-title">Waive a substitution</h3>
     <p class="hint" id="modal-run">—</p>
     <label class="kicker" for="waiver-reason">Reason (kept on the certificate)</label>
-    <input id="waiver-reason" type="text" placeholder="e.g. brand accepts the fallback for web only">
-    <div class="btn-row" style="margin-top:14px;justify-content:flex-end">
-      <button class="ghost small" id="modal-cancel">Cancel</button>
-      <button class="small" id="waiver-confirm">Sign waiver</button>
+    <input id="waiver-reason" type="text" required maxlength="240" placeholder="e.g. brand accepts the fallback for web only">
+    <div class="btn-row" style="margin-top: 14px; justify-content: flex-end">
+      <button type="button" class="ghost small" id="modal-cancel">Cancel</button>
+      <button type="submit" class="small" id="waiver-confirm">Sign as a person</button>
     </div>
-  </div>
+  </form>
 </div>
 
 <script type="module" src="/src/main.js"></script>
