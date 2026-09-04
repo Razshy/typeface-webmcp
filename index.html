@@ -16,7 +16,7 @@
     --paper-flash: #f6e3b4;
     --ink: #23201c;
     --ink-soft: #5f5749;
-    --ink-disabled: #8d8574;
+    --ink-disabled: #6b6455;
     --rule: #d7d0c1;
     --rule-soft: #e6e0d3;
     --stamp: #8c1d12;
@@ -61,12 +61,17 @@
   /* ---------- layout ---------- */
   .layout { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(340px, .85fr); align-items: start; }
   main { padding: 26px 30px 60px; border-right: 1px solid var(--rule); min-width: 0; }
-  aside { padding: 26px 26px 240px; }
-  @media (max-width: 1080px) { .layout { grid-template-columns: 1fr; } main { border-right: 0; } }
+  aside { padding: 26px 26px 34px; }
+  @media (max-width: 1080px) { .layout { grid-template-columns: 1fr; } main { border-right: 0; padding-bottom: 4px; } aside { padding-top: 4px; } }
   section.card { background: var(--paper-2); border: 1px solid var(--rule); margin-bottom: 22px; }
   section.card > header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 9px 14px; border-bottom: 1px solid var(--rule); background: var(--paper-3); }
   section.card > .body { padding: 14px; }
   .scroll-x { overflow-x: auto; }
+  .tablewrap { position: relative; }
+  .tablewrap::after { content: ""; position: absolute; top: 0; right: 0; bottom: 0; width: 30px; pointer-events: none; opacity: 0; transition: opacity .15s ease; background: linear-gradient(to left, var(--paper-2), rgba(255, 253, 247, 0)); }
+  .tablewrap.can-scroll::after { opacity: 1; }
+  .scroll-hint { display: none; margin: 8px 0 0; }
+  .tablewrap.can-scroll + .scroll-hint { display: block; }
   h2 { font-size: 15px; margin: 0; font-weight: 600; letter-spacing: .01em; }
   /* ---------- document ---------- */
   #doc { max-width: 620px; }
@@ -108,11 +113,11 @@
   .meter { flex: 1; height: 9px; border: 1px solid var(--rule); background: var(--white); position: relative; overflow: hidden; }
   .meter > i { position: absolute; inset: 0 auto 0 0; background: var(--seal); transition: width .3s ease, background .3s ease; }
   .meter.bad > i { background: var(--stamp); }
-  .sim { display: inline-block; font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--brass); border: 1px dashed var(--brass); padding: 1px 5px; }
+  .sim { display: inline-block; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--brass); border: 1px dashed var(--brass); padding: 1px 5px; }
   /* ---------- tables, drawer ---------- */
   .drawer-empty { color: var(--ink-soft); font-size: 13px; font-style: italic; }
   table.scrutiny { width: 100%; border-collapse: collapse; font-size: 12.5px; }
-  table.scrutiny th { text-align: left; font: 600 10px/1.6 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); padding: 4px 6px; border-bottom: 1px solid var(--rule); }
+  table.scrutiny th { text-align: left; font: 600 11px/1.6 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); padding: 4px 6px; border-bottom: 1px solid var(--rule); }
   table.scrutiny td { padding: 5px 6px; border-bottom: 1px dotted var(--rule-soft); vertical-align: top; }
   table.scrutiny td.v { font-family: var(--mono); font-size: 11.5px; text-align: right; white-space: nowrap; }
   .badge-row { margin-bottom: 10px; }
@@ -143,12 +148,12 @@
   ul.tools li:first-child, ol.log li:first-child { border-top: 0; }
   .tool-head, .log-head { display: flex; gap: 6px; align-items: baseline; flex-wrap: wrap; }
   .t-name { font-family: var(--mono); font-size: 11.5px; }
-  .t-orig { font-family: var(--mono); font-size: 9.5px; color: var(--ink-soft); }
+  .t-orig { font-family: var(--mono); font-size: 11px; color: var(--ink-soft); }
   .t-orig.proof { color: var(--proof); }
   .t-title { font-size: 12px; font-weight: 600; }
   .t-desc { font-size: 11.5px; color: var(--ink-soft); }
-  .t-params { font-family: var(--mono); font-size: 10px; color: var(--ink-soft); }
-  .chip { font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; border: 1px solid var(--rule); padding: 0 4px; border-radius: 2px; color: var(--ink-soft); }
+  .t-params { font-family: var(--mono); font-size: 10.5px; color: var(--ink-soft); }
+  .chip { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; border: 1px solid var(--rule); padding: 0 4px; border-radius: 2px; color: var(--ink-soft); }
   ol.log li.err .chip { border-color: var(--stamp); color: var(--stamp); }
   .log-io { font-family: var(--mono); font-size: 10.5px; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   ul.tools { max-height: 360px; overflow: auto; }
@@ -161,10 +166,8 @@
   #modal .sheet { background: var(--paper-2); border: 1px solid var(--ink); width: min(460px, 92vw); padding: 18px; }
   #modal h3 { margin: 0 0 4px; font-size: 18px; font-weight: 500; }
   #modal label { display: block; margin-top: 10px; }
-  iframe#proof-frame { position: fixed; right: 0; bottom: 0; width: 380px; height: 210px; border: 1px solid var(--rule); border-right: 0; border-bottom: 0; background: var(--paper-2); z-index: 30; }
-  iframe#proof-frame.minimised { height: 26px; }
-  .proof-toggle { position: fixed; right: 8px; bottom: 216px; z-index: 31; }
-  @media (max-width: 1080px) { .proof-toggle { bottom: 26px; } iframe#proof-frame { height: 26px; } }
+  iframe#proof-frame { display: block; width: 100%; height: 344px; border: 1px solid var(--rule); border-radius: 2px; background: var(--paper-2); }
+  iframe#proof-frame.minimised { height: 34px; }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { transition: none !important; animation: none !important; }
     .stamp { transform: none; }
@@ -200,7 +203,7 @@
       <header>
         <h2>The one-pager</h2>
         <div class="btn-row">
-          <span class="hint">click a run to interrogate it · type to edit it</span>
+          <span class="hint">start here: click any run below to interrogate it · type to edit it</span>
           <button type="button" class="ghost small" id="btn-audit">Re-audit</button>
           <button type="button" class="ghost small" id="btn-reset">Reset seed</button>
         </div>
@@ -235,8 +238,11 @@
 
     <section class="card">
       <header><h2>Audit table</h2><span class="hint">every number came back from the proof origin</span></header>
-      <div class="body scroll-x">
-        <table class="scrutiny" id="audit-table"></table>
+      <div class="body">
+        <div class="tablewrap" id="audit-wrap"><div class="scroll-x" id="audit-scroll">
+          <table class="scrutiny" id="audit-table"></table>
+        </div></div>
+        <p class="hint scroll-hint">scroll sideways for the remaining columns →</p>
       </div>
     </section>
   </main>
@@ -262,7 +268,7 @@
         </div>
         <div class="btn-row" style="margin-top: 12px">
           <button type="button" id="btn-export" disabled class="locked">Export</button>
-          <button type="button" class="ghost small" id="btn-waive-all">Waive all blocking runs…</button>
+          <button type="button" class="ghost small" id="btn-waive-all" title="Countersign every blocking run at once">Waive all…</button>
           <span class="sim" title="Export stamps a certificate id; no PDF is written.">export: certificate stamp only</span>
         </div>
         <p class="hint" id="gate-note" aria-live="polite"></p>
@@ -303,11 +309,22 @@
         <ul class="tools" id="tool-list"></ul>
       </div>
     </section>
+
+    <section class="card" id="proof-lab">
+      <header>
+        <h2>Proof lab</h2>
+        <div class="btn-row">
+          <span class="hint" id="proof-lab-mode">the origin that measures every verdict</span>
+          <button type="button" class="ghost small" id="proof-toggle" aria-expanded="true" aria-controls="proof-frame">Collapse</button>
+        </div>
+      </header>
+      <div class="body">
+        <iframe id="proof-frame" name="proof" title="proof origin" allow="tools"></iframe>
+      </div>
+    </section>
   </aside>
 </div>
 
-<button type="button" class="ghost small proof-toggle" id="proof-toggle" aria-expanded="true" aria-controls="proof-frame">proof lab</button>
-<iframe id="proof-frame" name="proof" title="proof origin" allow="tools"></iframe>
 <datalist id="family-options"></datalist>
 
 <div id="modal" hidden>

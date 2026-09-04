@@ -558,6 +558,15 @@ function renderTable() {
     tr.appendChild(verdict);
     t.appendChild(tr);
   }
+  markTableScroll();
+}
+
+/** The audit table is wider than the phone column; show the fade + hint only when it can scroll. */
+function markTableScroll() {
+  const wrap = $('audit-wrap');
+  const box = $('audit-scroll');
+  if (!wrap || !box) return;
+  wrap.classList.toggle('can-scroll', box.scrollWidth - box.clientWidth > 4);
 }
 
 function selectRun(runId) {
@@ -946,7 +955,7 @@ const TOOLS = [
   {
     name: 'family_report',
     title: 'Try a candidate family',
-    description: 'What a candidate family would do to the document: whether it is installed here (glyph_hash), and for each run (or the given runIds) the line count and width delta versus the run’s current face, measured by the proof origin. Returns {family, present, kind, runs:[…]}. Changes nothing.',
+    description: 'Predicts what the export gate would say if a candidate family were applied; changes nothing. Per run (or the given runIds): substitutedIfApplied, wrapDeltaPctIfApplied (the candidate’s own wrap-median shift under ITS export substitute — the number the gate tests against wrapThresholdPct), exportSubstituteIfApplied, blockedByIfApplied ([] means it clears), wouldClearGate. linesNow/linesWithCandidate/widthDeltaVsCurrentPct compare with the run’s current face: context only.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -973,12 +982,30 @@ const TOOLS = [
         if (now.ok === false) return now;
         const next = await proofCall('wrap_metrics', Object.assign({ family }, args));
         if (next.ok === false) return next;
+        /* Hash the candidate against THIS run's own text and size, so substitutedIfApplied is
+         * exactly what run_audit would record after the swap — not a probe at a default size. */
+        const hash = await proofCall('glyph_hash', { text: args.text, family, size: args.size, letterSpacingPx: args.letterSpacingPx });
+        if (hash.ok === false) return hash;
+        /* Same predicate as blockReasons(), applied to the candidate's own measurements. */
+        const wrapDelta = next.medianRightEdgeDeltaPct;
+        const blockedBy = [];
+        if (hash.substituted) blockedBy.push('substituted');
+        if (hash.present && wrapDelta !== null && Math.abs(wrapDelta) > state.wrapThresholdPct) blockedBy.push('wrap-shift');
         rows.push({
           runId: run.id, currentFamily: run.family, linesNow: now.declared.lineCount, linesWithCandidate: next.declared.lineCount,
-          widthDeltaPct: round2(((next.declared.widthPx - now.declared.widthPx) / (now.declared.widthPx || 1)) * 100)
+          widthDeltaVsCurrentPct: round2(((next.declared.widthPx - now.declared.widthPx) / (now.declared.widthPx || 1)) * 100),
+          substitutedIfApplied: hash.substituted, kindIfApplied: hash.kind,
+          exportSubstituteIfApplied: next.substituteFamily, wrapDeltaPctIfApplied: wrapDelta,
+          blockedByIfApplied: blockedBy, wouldClearGate: blockedBy.length === 0
         });
       }
-      return { ok: true, family, present: probe.present, kind: probe.kind, proofOrigin: probe.proofOrigin, columnPx: state.columnPx, runs: rows };
+      return {
+        ok: true, family, present: probe.present, kind: probe.kind, proofOrigin: probe.proofOrigin,
+        columnPx: state.columnPx, wrapThresholdPct: state.wrapThresholdPct,
+        wouldClearGate: rows.every((r) => r.wouldClearGate),
+        predicts: 'blockedByIfApplied uses the same rule as the gate: substitution blocks, and a present face blocks when its own wrap median shifts more than wrapThresholdPct under its export substitute. Nothing was changed; apply with substitute_safe.',
+        runs: rows
+      };
     }
   },
   {
@@ -1158,6 +1185,7 @@ function wireHumanUi() {
   $('proof-toggle').addEventListener('click', () => {
     const min = $('proof-frame').classList.toggle('minimised');
     $('proof-toggle').setAttribute('aria-expanded', String(!min));
+    $('proof-toggle').textContent = min ? 'Expand' : 'Collapse';
   });
 
   $('agent-form').addEventListener('submit', async (ev) => {
@@ -1206,6 +1234,7 @@ function wireHumanUi() {
   });
 
   window.addEventListener('mc-toolchange', () => { state.toolchanges += 1; scheduleToolList(); });
+  window.addEventListener('resize', markTableScroll);
   const datalist = $('family-options');
   for (const f of [...new Set([...Object.keys(EXPORT_CHAIN), 'Palatino', 'Baskerville', 'Optima', 'Futura', 'Avenir', 'Trebuchet MS', 'Courier New', 'DejaVu Serif', 'Liberation Mono'])]) datalist.appendChild(el('option', null, f));
 }

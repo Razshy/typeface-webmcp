@@ -24,10 +24,10 @@
   .bad { color: var(--stamp); }
   #cert { margin: 12px; padding: 12px 14px; background: var(--paper-2); border: 2px solid var(--ink); position: relative; box-shadow: 4px 4px 0 rgba(36, 31, 27, .12); }
   #cert::before { content: ""; position: absolute; inset: 4px; border: 1px solid var(--rule); pointer-events: none; }
-  #cert .cap { font: 700 9px/1 var(--mono); letter-spacing: .22em; text-transform: uppercase; color: var(--ink-soft); }
+  #cert .cap { font: 700 9px/1.35 var(--mono); letter-spacing: .22em; text-transform: uppercase; color: var(--ink-soft); margin-right: 80px; }
   #cert .head { font: 400 15px/1.2 Georgia, serif; margin: 6px 70px 4px 0; }
   #cert .who { font: 400 13px/1.3 Georgia, serif; margin: 2px 0 6px; }
-  #cert .hashes { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 12px; font-size: 10.5px; }
+  #cert .hashes { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 2px 12px; font-size: 10.5px; }
   #cert .hashes span { color: var(--ink-soft); }
   #cert .hashes b { font-weight: 400; }
   #cert .stamp { position: absolute; right: 9px; top: 9px; font: 700 9px/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; border: 2px solid currentColor; padding: 5px 6px; border-radius: 2px; transform: rotate(-7deg); width: 74px; text-align: center; background: rgba(255, 255, 255, .75); color: var(--ink-soft); }

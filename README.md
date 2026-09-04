@@ -12,7 +12,7 @@
 
 1. **Audit and fix in one turn.** Type into ChatGPT: *"Audit this one-pager, tell me which runs are not set in the face they claim, and swap the absent faces for an installed serif that keeps the line count."* The agent calls `run_audit`, reads `blockedBy`, tries candidates with `family_report`, then `substitute_safe` — the document, the audit table and the gate count change on screen as it works.
 2. **Propose, human signs.** *"Run 6 is Verdana and shifts 13% under its export substitute; propose a waiver saying we only ship this page on the web."* The agent calls `waiver_propose`; the Export gate panel shows *proposed by agent* with a Countersign button. Nothing unlocks until you click it and sign as a person.
-3. **Interrogate the evidence.** *"Prove whether Helvetica and Arial are the same face here, and whether fonts.check is contradicted for Frutiger."* The agent calls `proof_compare_faces` and `proof_font_check`; the proof lab in the corner prints its own certificate for each answer.
+3. **Interrogate the evidence.** *"Prove whether Helvetica and Arial are the same face here, and whether fonts.check is contradicted for Frutiger."* The agent calls `proof_compare_faces` and `proof_font_check`; the proof lab panel at the foot of the right column prints its own certificate for each answer.
 
 ## Better UX
 
@@ -26,7 +26,7 @@ While the agent works, the human sees: every run underlined red (blocking), bras
 | `run_list` | cached verdict per run (`kind`, `blockedBy`, deltas) | yes | main | yes | imperative |
 | `run_audit` | re-measure runs through the proof surface; refreshes flags and gate | no | main | yes | imperative |
 | `run_explain` | full evidence for one run + one-sentence reading | yes | main | yes | imperative |
-| `family_report` | what a candidate family would do to each run | yes | main | yes | imperative |
+| `family_report` | whether a candidate family would clear the gate on each run (`blockedByIfApplied`, `wrapDeltaPctIfApplied`) | yes | main | yes | imperative |
 | `substitute_safe` | swap a family (`oldFamily`, `newFamily`, optional `runIds`) after the proof surface proves the new one draws its own outlines | no | main | yes | imperative |
 | `doc_edit` | change a run's text/family, re-audit it | no | main | yes | imperative |
 | `waiver_propose` | record an agent proposal; a person must countersign | no | main | yes | imperative |
