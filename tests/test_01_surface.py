@@ -33,7 +33,7 @@ def main():
         # --- inventory ----------------------------------------------------------------------
         top = tools(pg)
         names = [t['name'] for t in top]
-        ok(all(n in names for n in MAIN_TOOLS + BRIDGES + ['doc_find']), 'all 20 imperative tools + the declarative form are top-level', names)
+        ok(all(n in names for n in MAIN_TOOLS + BRIDGES + ['doc_find']), 'all 19 imperative tools + the declarative form are top-level', names)
         ok(not any(n in names for n in PROOF_TOOLS + ['decoy_unexposed']), 'proof-origin tools invisible without fromOrigins', names)
         ok(all(t['origin'] == pg.evaluate('location.origin') for t in top), 'top-level tools carry the main origin')
         both = tools(pg, [PROOF])
